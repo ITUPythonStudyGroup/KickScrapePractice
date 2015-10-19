@@ -1,2 +1,2 @@
 # KickScrapePractice
-Repository where we can store our store and share our own git code
+Create a personal folders to store your code and let the other members see it :)
