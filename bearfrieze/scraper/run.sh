@@ -1,4 +1,4 @@
 #!/bin/bash
-NAME=kick-api
+NAME=kick-scraper
 docker build -t $NAME .
 docker run -it --rm --name $NAME $NAME
