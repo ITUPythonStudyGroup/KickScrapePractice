@@ -42,8 +42,7 @@ FILTERS = {
 }
 
 def scrape(filter, minutes):
-
-    logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+    
     logging.info('filter = %s, minutes = %d' % (filter, minutes))
 
     filter = FILTERS[filter]
