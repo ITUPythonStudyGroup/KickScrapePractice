@@ -43,7 +43,7 @@ FILTERS = {
 
 args = sys.argv[1:]
 if len(args) < 2: sys.exit('ERROR: Insufficient number of arguments!')
-f = FILTERS[args[0]]
+filter = FILTERS[args[0]]
 stop = int(time.time()) - int(args[1]) * 60
 
 '''
@@ -56,12 +56,16 @@ https://rethinkdb.com/api/python/table_create/
 https://rethinkdb.com/api/python/index_create/
 '''
 
-c = r.connect("52.28.17.23", 28015, db='kickstarter')
-try: r.table_create(f['table']).run(c)
+connection = r.connect("52.28.17.23", 28015, db='kickstarter')
+try: r.table_create(filter['table']).run(connection)
 except r.ReqlRuntimeError: pass
-for index in f['indexes']:
-    try: r.table(f['table']).index_create(index).run(c)
-    except r.ReqlRuntimeError: pass
+for index in filter['indexes']:
+    try:
+        r.table(filter['table']) \
+            .index_create(index) \
+            .run(connection)
+    except r.ReqlRuntimeError:
+        pass
 
 '''
 Here we are doing the actual scraping. When we reach a project that is less
@@ -74,16 +78,16 @@ this is necessarily optimal, but it works for now.
 page = 1
 while True:
 
-    response = requests.get(f['url'] % page)
+    response = requests.get(filter['url'] % page)
     if response.status_code != 200: break
     data = json.loads(response.text)
 
     for project in data['projects']: print(project['name'])
 
-    result = r.table(f['table']) \
+    result = r.table(filter['table']) \
         .insert(data['projects'], conflict="update") \
-        .run(c)
+        .run(connection)
     print(result)
 
-    if data['projects'][-1][f['break']] < stop: break
+    if data['projects'][-1][filter['break']] < stop: break
     page += 1
