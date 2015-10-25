@@ -23,5 +23,6 @@ projects = list(projects)
 x = [project['goal'] for project in projects]
 y = [project['pledged'] / project['goal'] for project in projects]
 plt.loglog(x, y, 'o')
+plt.gca().set_ylim([0, 100])
 plt.grid(True, which='both')
 plt.show()
