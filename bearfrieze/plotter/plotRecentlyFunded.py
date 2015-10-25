@@ -10,12 +10,18 @@ projects = r.db('kickstarter') \
     .pluck('goal', 'pledged') \
     .run(connection)
 projects = list(projects)
-x = [project['goal'] for project in projects]
-y = [project['pledged'] for project in projects]
 
-plt.scatter(x,y)
-plt.plot([0, MAX], [0, MAX])
-plt.axis((0, MAX, 0, MAX))
-plt.gca().set_aspect('equal', adjustable='box')
-plt.grid(True)
+# x = [project['goal'] for project in projects]
+# y = [project['pledged'] for project in projects]
+# plt.scatter(x,y)
+# plt.plot([0, MAX], [0, MAX])
+# plt.axis((0, MAX, 0, MAX))
+# plt.gca().set_aspect('equal', adjustable='box')
+# plt.grid(True)
+# plt.show()
+
+x = [project['goal'] for project in projects]
+y = [project['pledged'] / project['goal'] for project in projects]
+plt.loglog(x, y, 'o')
+plt.grid(True, which='both')
 plt.show()
