@@ -13,7 +13,7 @@ A number of minutes must be supplied as a second argument. The scraper should
 stop when it reaches a project that is older than the number of minutes.
 '''
 
-import sys, time, logging, json, requests, rethinkdb as r
+import sys, time, json, requests, rethinkdb as r
 
 '''
 The scraper uses Kickstarters unofficial API.
@@ -42,8 +42,6 @@ FILTERS = {
 }
 
 def scrape(filter, minutes):
-    
-    logging.info('filter = %s, minutes = %d' % (filter, minutes))
 
     filter = FILTERS[filter]
     stop = int(time.time()) - minutes * 60
@@ -62,12 +60,8 @@ def scrape(filter, minutes):
     try: r.table_create(filter['table']).run(connection)
     except r.ReqlRuntimeError: pass
     for index in filter['indexes']:
-        try:
-            r.table(filter['table']) \
-                .index_create(index) \
-                .run(connection)
-        except r.ReqlRuntimeError:
-            pass
+        try: r.table(filter['table']).index_create(index).run(connection)
+        except r.ReqlRuntimeError: pass
 
     '''
     Here we are doing the actual scraping. When we reach a project that is less
