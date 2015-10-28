@@ -1,5 +1,5 @@
 import schedule, time, datetime, os, sys, logging, rethinkdb as r
-from scrapeRecentProjects import scrape
+import scrapeRecentProjects, scrapeLiveProjects
 
 LOGTABLE = 'logScrape'
 
@@ -14,14 +14,10 @@ def logStamp():
         'iso': datetime.datetime.utcnow().isoformat(),
         'epoch': int(time.time()),
     }
-def logScrape(filter, minutes):
-    log = {
-        'filter': filter,
-        'minutes': minutes,
-        'start': logStamp(),
-    }
+
+def logScrape(log, f):
     try:
-        scrape(filter, minutes)
+        f()
         log['done'] = logStamp()
     except Exception as e:
         log['fail'] = logStamp()
@@ -29,13 +25,21 @@ def logScrape(filter, minutes):
     finally:
         r.table(LOGTABLE).insert(log).run(connection)
 
-def scrapeLaunched():
-    logScrape('launched', 65)
-def scrapeFunded():
-    logScrape('funded', 65)
+def logRecentScrape(filter, minutes):
+    log = {
+        'filter': filter,
+        'minutes': minutes,
+        'start': logStamp(),
+    }
+    logScrape(log, lambda: scrapeRecentProjects.scrape(filter, minutes))
 
-schedule.every().hour.do(scrapeLaunched)
-schedule.every().hour.do(scrapeFunded)
+def scrapeLive():
+    log = {'start': logStamp()}
+    logScrape(log, scrapeLiveProjects.scrape())
+
+schedule.every().hour.do(lambda: logRecentScrape('launched', 65))
+schedule.every().hour.do(lambda: logRecentScrape('funded', 65))
+schedule.every().hour.do(scrapeLive)
 
 schedule.run_all()
 

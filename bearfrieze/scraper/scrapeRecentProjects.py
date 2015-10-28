@@ -79,11 +79,13 @@ def scrape(filter, minutes):
         data = json.loads(response.text)
 
         result = r.table(filter['table']) \
-            .insert(data['projects'], conflict="update") \
+            .insert(data['projects'], conflict="replace") \
             .run(connection)
 
         if data['projects'][-1][filter['break']] < stop: break
         page += 1
+
+    connection.close()
 
 def main(argv):
     args = argv[1:]
