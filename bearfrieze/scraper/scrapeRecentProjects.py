@@ -31,13 +31,13 @@ FILTERS = {
         'url': BASE % 'sort=newest&format=json&page=%d',
         'break': 'launched_at',
         'table': 'projectsRecentlyLaunched',
-        'indexes': ['launched_at']
+        'indexes': ['launched_at', 'deadline']
     },
     'funded': {
         'table': 'projectsRecentlyFunded',
         'url': BASE % 'state=successful&sort=end_date&format=json&page=%d',
         'break': 'deadline',
-        'indexes': ['deadline']
+        'indexes': ['launched_at', 'deadline']
     }
 }
 
