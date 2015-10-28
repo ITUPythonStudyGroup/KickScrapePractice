@@ -56,9 +56,7 @@ def scrape():
             projects = json.loads(response.text)['projects']
             projects = list(map(addScraped, projects))
             live = list(filter(lambda p: p['state'] == 'live', projects))
-            result = r.table(TABLE) \
-                .insert(live, conflict="replace") \
-                .run()
+            result = r.table(TABLE).insert(live, conflict="replace").run()
             if len(projects) != len(live): break
             page += 1
         print('Scraped %d pages for category %d' % (page, category))

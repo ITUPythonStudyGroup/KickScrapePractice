@@ -35,7 +35,7 @@ def logRecentScrape(filter, minutes):
 
 def scrapeLive():
     log = {'start': logStamp()}
-    logScrape(log, scrapeLiveProjects.scrape())
+    logScrape(log, lambda: scrapeLiveProjects.scrape())
 
 schedule.every().hour.do(lambda: logRecentScrape('launched', 65))
 schedule.every().hour.do(lambda: logRecentScrape('funded', 65))
