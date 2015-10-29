@@ -30,11 +30,15 @@ def logRecentScrape(filter, minutes):
         'filter': filter,
         'minutes': minutes,
         'start': logStamp(),
+        'type': 'recent',
     }
     logScrape(log, lambda: scrapeRecentProjects.scrape(filter, minutes))
 
 def scrapeLive():
-    log = {'start': logStamp()}
+    log = {
+        'start': logStamp(),
+        'type': 'live',
+    }
     logScrape(log, lambda: scrapeLiveProjects.scrape())
 
 # https://github.com/dbader/schedule/issues/55
