@@ -37,11 +37,10 @@ def scrapeLive():
     log = {'start': logStamp()}
     logScrape(log, lambda: scrapeLiveProjects.scrape())
 
-schedule.every().hour.do(lambda: logRecentScrape('launched', 65))
-schedule.every().hour.do(lambda: logRecentScrape('funded', 65))
-schedule.every().hour.do(scrapeLive)
-
-schedule.run_all()
+# https://github.com/dbader/schedule/issues/55
+schedule.every().hour.at('00:00').do(lambda: logRecentScrape('launched', 65))
+schedule.every().hour.at('00:05').do(lambda: logRecentScrape('funded', 65))
+schedule.every().hour.at('00:10').do(scrapeLive)
 
 while True:
     schedule.run_pending()
