@@ -32,7 +32,7 @@ DB = {
 }
 TABLE = 'projectsLive'
 PRIMARY = 'scraped'
-INDEXES = ['launched_at', 'deadline']
+INDEXES = ['id', 'launched_at', 'deadline']
 CATEGORIES = [1, 3, 6, 7, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 26]
 
 def addScraped(project):
